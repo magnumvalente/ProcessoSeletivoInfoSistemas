@@ -1,0 +1,17 @@
+{
+    "vehiclesDataDB":
+    {
+        "data":
+        [
+            {
+                "id": 1,
+                "placa": "HJN7752",
+                "chassi": "58A9888D855B574",
+                "renavan": "5449898489",
+                "modelo": "Palio ELX",
+                "marca": "Fiat",
+                "ano": 2010
+            }
+        ]
+    }    
+}
