@@ -68,7 +68,7 @@ module.exports = app => {
                 id: uuidv4(),
                 placa: req.body.placa,
                 chassi: req.body.chassi,
-                renavan: req.body.renavan,
+                renavam: req.body.renavam,
                 modelo: req.body.modelo,
                 marca: req.body.marca,
                 ano: req.body.ano
@@ -77,6 +77,16 @@ module.exports = app => {
             saveVehicleData(vehiclesData);
 
             res.status(201).json(vehiclesDataMock);
+        }
+    }
+
+    controller.getVehicle = (req, res) => {
+
+        const vehicleIndex = findVehicleIndex(vehiclesDataMock, req, res);
+
+        if (vehicleIndex > -1){
+
+            res.status(200).json(vehiclesDataMock.data[vehicleIndex]);
         }
     }
 
@@ -92,7 +102,7 @@ module.exports = app => {
 
             res.status(200).json(vehiclesDataMock);
         }
-    }
+    }    
 
     controller.updateVehicle = (req, res) => {
 
@@ -109,7 +119,7 @@ module.exports = app => {
                     id: vehicleId,
                     placa: req.body.placa,
                     chassi: req.body.chassi,
-                    renavan: req.body.renavan,
+                    renavam: req.body.renavam,
                     modelo: req.body.modelo,
                     marca: req.body.marca,
                     ano: req.body.ano

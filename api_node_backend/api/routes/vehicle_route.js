@@ -6,6 +6,7 @@ module.exports = app => {
         .post(controller.saveVehicle);
 
     app.route('/api/v1/vehicle/:vehicleId')
+        .get(controller.getVehicle)
         .delete(controller.removeVehicle)
         .put(controller.updateVehicle);
 }
