@@ -7,12 +7,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { MessagesComponent } from './messages/messages.component';
+import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VehiclesComponent,
-    MessagesComponent
+    MessagesComponent,
+    VehicleDetailComponent
   ],
   imports: [
     BrowserModule,

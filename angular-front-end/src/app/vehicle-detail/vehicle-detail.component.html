@@ -1,0 +1,16 @@
+<div class="card add-car">
+    <h5 class="card-header">Adicionar/Atualizar veículo</h5>
+    <div class="card-body">
+        <form id="add-form" (ngSubmit)="f.form.valid && saveVehicle(f)" #f="ngForm" novalidate>
+            <div class="form-group">
+                <label for="placa">Placa</label>
+                <input type="text" [(ngModel)]="vehicle.placa" pattern="[A-Z]{3}[0-9]{4}" id="placa" name="placa" #placa="ngModel" required class="form-control" [ngClass]="{ 'is-invalid': f.submitted && placa.invalid }" placeholder="Digite a placa">
+                <div *ngIf="f.submitted && placa.invalid" class="invalid-feedback">
+                    <div *ngIf="placa.errors.required">Placa é obrigatório</div>
+                </div>
+            </div>
+          <button type="submit" class="btn btn-primary btn-add-car">Salvar</button>
+          <button type="reset" class="btn btn-secondary btn-add-car" (click)="cleanForm(f)">Cancelar</button>
+        </form>
+    </div>
+  </div>

@@ -1,20 +1,32 @@
-<h2>Veiculos</h2>
-<ul class="veiculos">
-  <li *ngFor="let vehicle of vehicles"
-    [class.selected]="vehicle === selectedVehicle"
-    (click)="onSelect(vehicle)">
-    <span class="badge">{{vehicle.id}}</span> {{vehicle.placa}}
-  </li>
-</ul>
-
-<div *ngIf="selectedVehicle">
-
-  <h2>Detalhes da placa:{{selectedVehicle.placa | uppercase}}</h2>
-  <div><span>id: </span>{{selectedVehicle.id}}</div>
-  <div>
-    <label>placa:
-      <input [(ngModel)]="selectedVehicle.placa" placeholder="placa"/>
-    </label>
+<div class="card list-car">
+    <h5 class="card-header">Lista de veículos</h5>
+    <div class="card-body">
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Placa</th>
+              <th scope="col">Marca</th>
+              <th scope="col">Modelo</th>
+              <th scope="col">Ano</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vehicle of vehicles">
+              <td>{{vehicle.placa}}</td>
+              <td>{{vehicle.marca}}</td>
+              <td>{{vehicle.modelo}}</td>
+              <td>{{vehicle.ano}}</td>
+              <td>
+                <button type="button" class="btn btn-warning btn-sm" (click)="editVehicle(vehicle)">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="removeVehicle(vehicle)">Remover</button>
+              </td>
+            </tr>
+            <tr *ngif="!vehicles || vehicles.length === 0">
+                <td colspan="5">OI</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
   </div>
-
-</div>
+  <app-vehicle-detail [vehicle]="selectedVehicle"></app-vehicle-detail>

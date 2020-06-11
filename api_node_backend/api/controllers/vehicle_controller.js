@@ -14,7 +14,7 @@ function findVehicleIndex(vehiclesDataMock, req, res){
 
         res.status(404).json({
             message: 'Veículo não encontrado.',
-            sucess: false
+            success: false
         });
     }
     return vehicleIndex;
@@ -26,7 +26,7 @@ function validateSaveOrUpdateData(vehiclesDataMock, req, res){
     if (vehicleIndex > -1){
         res.status(409).json({
             message: `Veículo com a placa '${req.body.placa}' já existe.`,
-            sucess: false
+            success: false
         });
         return false;
     }
@@ -35,7 +35,7 @@ function validateSaveOrUpdateData(vehiclesDataMock, req, res){
     if (vehicleIndex > -1){
         res.status(409).json({
             message: `Veículo com o chassi '${req.body.chassi}' já existe.`,
-            sucess: false
+            success: false
         });
         return false;
     }
@@ -44,7 +44,7 @@ function validateSaveOrUpdateData(vehiclesDataMock, req, res){
     if (vehicleIndex > -1){
         res.status(409).json({
             message: `Veículo com o renavam '${req.body.renavam}' já existe.`,
-            sucess: false
+            success: false
         });
         return false;
     }
@@ -76,7 +76,7 @@ module.exports = app => {
 
             saveVehicleData(vehiclesData);
 
-            res.status(201).json(vehiclesDataMock.data);
+            res.status(201).json({ success: true });
         }
     }
 
@@ -100,7 +100,7 @@ module.exports = app => {
 
             saveVehicleData(vehiclesData);
 
-            res.status(200).json(vehiclesDataMock.data);
+            res.status(200).json({ success: true });
         }
     }    
 
@@ -125,7 +125,7 @@ module.exports = app => {
                     ano: req.body.ano
                 });
 
-                res.status(200).json(vehiclesDataMock.data);
+                res.status(200).json({ success: true });
 
             }else{
 

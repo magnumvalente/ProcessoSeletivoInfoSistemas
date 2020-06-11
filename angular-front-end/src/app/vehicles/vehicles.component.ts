@@ -24,9 +24,14 @@ export class VehiclesComponent implements OnInit {
       .subscribe(vehicles => this.vehicles = vehicles);
   }
 
-  onSelect(vehicle: Vehicle): void {
+  editVehicle(vehicle: Vehicle): void {
     this.selectedVehicle = vehicle;
-    this.messageService.add(`O veículo '${vehicle.id}' foi selecionado.`)
+    this.messageService.add(`O veículo '${vehicle.placa}' foi selecionado.`)
+  }
+
+  removeVehicle(vehicle: Vehicle): void {
+    this.vehicleService.removeVehicle(vehicle.id)
+      .subscribe(() => this.getVehicles());
   }
 
 }
