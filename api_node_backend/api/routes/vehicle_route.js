@@ -5,7 +5,7 @@ module.exports = app => {
         .get(controller.listVehicles)
         .post(controller.saveVehicle);
 
-    app.route('/api/v1/vehicle/:vehicleId')
+    app.route('/api/v1/vehicles/:vehicleId')
         .get(controller.getVehicle)
         .delete(controller.removeVehicle)
         .put(controller.updateVehicle);

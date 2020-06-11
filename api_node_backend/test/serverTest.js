@@ -13,7 +13,7 @@ describe("Backend API", () => {
         const { vehiclesDataDB: vehiclesData } = require(pathData);
         vehiclesData.data.forEach((vehicle, index) => {
             chai.request(app)
-                .delete(`/api/v1/vehicle/${vehicle.id}`)
+                .delete(`/api/v1/vehicles/${vehicle.id}`)
                 .end((error, response) => {
                     expect(response).to.have.status(200);
                 });
@@ -38,7 +38,7 @@ describe("Backend API", () => {
             .end((error, response) => {
                 expect(response).to.have.status(201);
                 const { vehiclesDataDB: vehiclesData } = require(pathData);
-                expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData));       
+                expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData.data));       
             });
             done();
         });
@@ -124,7 +124,7 @@ describe("Backend API", () => {
             .end((error, response) => {
                 expect(response).to.have.status(201);
                 const { vehiclesDataDB: vehiclesData } = require(pathData);
-                expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData));
+                expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData.data));
                 vehicleToUpdate = vehiclesData.data.find(v => v.placa === "HJG7342");
             });
             done();
@@ -141,24 +141,23 @@ describe("Backend API", () => {
             }
 
             chai.request(app)
-            .put(`/api/v1/vehicle/${vehicleToUpdate.id}`)
+            .put(`/api/v1/vehicles/${vehicleToUpdate.id}`)
             .send(vehicle)
             .end((error, response) => {
                 expect(response).to.have.status(200);
-                expect(response.body).to.have.property("data");
-                let vehicleupdatedIndex = response.body.data.findIndex(v => v.placa === "HJG7342");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("placa");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("chassi");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("renavam");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("modelo");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("marca");
-                expect(response.body.data[vehicleupdatedIndex]).to.have.property("ano");
-                expect(response.body.data[vehicleupdatedIndex].placa).to.equal(vehicle.placa);
-                expect(response.body.data[vehicleupdatedIndex].chassi).to.equal(vehicle.chassi);
-                expect(response.body.data[vehicleupdatedIndex].renavam).to.equal(vehicle.renavam);
-                expect(response.body.data[vehicleupdatedIndex].modelo).to.equal(vehicle.modelo);
-                expect(response.body.data[vehicleupdatedIndex].marca).to.equal(vehicle.marca);
-                expect(response.body.data[vehicleupdatedIndex].ano).to.equal(vehicle.ano);
+                let vehicleupdatedIndex = response.body.findIndex(v => v.placa === "HJG7342");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("placa");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("chassi");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("renavam");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("modelo");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("marca");
+                expect(response.body[vehicleupdatedIndex]).to.have.property("ano");
+                expect(response.body[vehicleupdatedIndex].placa).to.equal(vehicle.placa);
+                expect(response.body[vehicleupdatedIndex].chassi).to.equal(vehicle.chassi);
+                expect(response.body[vehicleupdatedIndex].renavam).to.equal(vehicle.renavam);
+                expect(response.body[vehicleupdatedIndex].modelo).to.equal(vehicle.modelo);
+                expect(response.body[vehicleupdatedIndex].marca).to.equal(vehicle.marca);
+                expect(response.body[vehicleupdatedIndex].ano).to.equal(vehicle.ano);
             });
             done();
         });
@@ -173,7 +172,7 @@ describe("Backend API", () => {
                 ano: 2015
             }
             chai.request(app)
-            .put(`/api/v1/vehicle/${vehicleToUpdate.id}`)
+            .put(`/api/v1/vehicles/${vehicleToUpdate.id}`)
             .send(vehicle)
             .end((error, response) => {
                 expect(response).to.have.status(409);
@@ -193,7 +192,7 @@ describe("Backend API", () => {
                 ano: 2015
             }
             chai.request(app)
-            .put(`/api/v1/vehicle/${vehicleToUpdate.id}`)
+            .put(`/api/v1/vehicles/${vehicleToUpdate.id}`)
             .send(vehicle)
             .end((error, response) => {
                 expect(response).to.have.status(409);
@@ -213,7 +212,7 @@ describe("Backend API", () => {
                 ano: 2015
             }
             chai.request(app)
-            .put(`/api/v1/vehicle/${vehicleToUpdate.id}`)
+            .put(`/api/v1/vehicles/${vehicleToUpdate.id}`)
             .send(vehicle)
             .end((error, response) => {
                 expect(response).to.have.status(409);
@@ -233,7 +232,7 @@ describe("Backend API", () => {
                 ano: 2015
             }
             chai.request(app)
-            .put("/api/v1/vehicle/0")
+            .put("/api/v1/vehicles/0")
             .send(vehicle)
             .end((error, response) => {
                 expect(response).to.have.status(404);
@@ -253,7 +252,7 @@ describe("Backend API", () => {
                 .end((error, response) => {
                     expect(response).to.have.status(200);
                     const { vehiclesDataDB: vehiclesData } = require(pathData);
-                    expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData));       
+                    expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData.data));       
                 });
             done();
         });
@@ -265,7 +264,7 @@ describe("Backend API", () => {
             if (vehicle !== null){
 
                 chai.request(app)
-                    .get(`/api/v1/vehicle/${vehicle.id}`)
+                    .get(`/api/v1/vehicles/${vehicle.id}`)
                     .end((error, response) => {
                         expect(response).to.have.status(200);
                         
@@ -277,7 +276,7 @@ describe("Backend API", () => {
 
         it("returns that there is no vehicle", (done) => {
             chai.request(app)
-                .get("/api/v1/vehicle/0")
+                .get("/api/v1/vehicles/0")
                 .end((error, response) => {
                     expect(response).to.have.status(404);
                     expect(response.body).to.have.property("message");
@@ -296,11 +295,11 @@ describe("Backend API", () => {
             if (vehicle !== null){
 
                 chai.request(app)
-                .delete(`/api/v1/vehicle/${vehicle.id}`)
+                .delete(`/api/v1/vehicles/${vehicle.id}`)
                 .end((error, response) => {
                     expect(response).to.have.status(200);
                     let { vehiclesDataDB: vehiclesData } = require(pathData);
-                    expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData));       
+                    expect(JSON.stringify(response.body)).to.equal(JSON.stringify(vehiclesData.data));       
                 });
             }            
             done();
@@ -308,7 +307,7 @@ describe("Backend API", () => {
 
         it("returns that there is no vehicle", (done) => {
             chai.request(app)
-                .delete("/api/v1/vehicle/0")
+                .delete("/api/v1/vehicles/0")
                 .end((error, response) => {
                     expect(response).to.have.status(404);
                     expect(response.body).to.have.property("message");

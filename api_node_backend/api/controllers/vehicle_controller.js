@@ -58,7 +58,7 @@ module.exports = app => {
     const controller = {};
     const { vehiclesDataDB: vehiclesDataMock } = vehiclesData;
   
-    controller.listVehicles = (req, res) => res.status(200).json(vehiclesDataMock);
+    controller.listVehicles = (req, res) => res.status(200).json(vehiclesDataMock.data);
 
     controller.saveVehicle = (req, res) => {
 
@@ -76,7 +76,7 @@ module.exports = app => {
 
             saveVehicleData(vehiclesData);
 
-            res.status(201).json(vehiclesDataMock);
+            res.status(201).json(vehiclesDataMock.data);
         }
     }
 
@@ -100,7 +100,7 @@ module.exports = app => {
 
             saveVehicleData(vehiclesData);
 
-            res.status(200).json(vehiclesDataMock);
+            res.status(200).json(vehiclesDataMock.data);
         }
     }    
 
@@ -125,7 +125,7 @@ module.exports = app => {
                     ano: req.body.ano
                 });
 
-                res.status(200).json(vehiclesDataMock);
+                res.status(200).json(vehiclesDataMock.data);
 
             }else{
 
