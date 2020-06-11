@@ -124,14 +124,15 @@ module.exports = app => {
                     marca: req.body.marca,
                     ano: req.body.ano
                 });
+
+                res.status(200).json(vehiclesDataMock);
+
             }else{
 
                 vehiclesDataMock.data.push(vehicleRemoved);
             }
 
-            saveVehicleData(vehiclesData);
-
-            res.status(200).json(vehiclesDataMock);
+            saveVehicleData(vehiclesData);            
         }
     }
 
