@@ -9,10 +9,10 @@ Os testes para validação da API foram feitos no arquivo 'serverTest.js'.
 ### Rotas
 
     GET: http://localhost:8080/api/v1/vehicles
-   POST: http://localhost:8080/api/v1/vehicles
+    POST: http://localhost:8080/api/v1/vehicles
     GET: http://localhost:8080/api/v1/vehicles/:vehicleId
- UPDATE: http://localhost:8080/api/v1/vehicles/:vehicleId
- DELETE: http://localhost:8080/api/v1/vehicles/:vehicleId
+    UPDATE: http://localhost:8080/api/v1/vehicles/:vehicleId
+    DELETE: http://localhost:8080/api/v1/vehicles/:vehicleId
 
 ## Front End
 Foi criado uma aplicação em Angular para realizar o CRUD de veículos.
