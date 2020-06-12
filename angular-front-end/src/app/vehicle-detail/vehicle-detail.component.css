@@ -1,0 +1,31 @@
+.add-car {
+    margin-bottom: 30px;
+}
+
+.btn-add-car {
+    margin-right: 10px;
+}
+
+#placa {
+    max-width: 120px;
+}
+
+#chassi {
+    max-width: 230px;
+}
+
+#renavam {
+    max-width: 120px;
+}
+
+#marca {
+    max-width: 200px;
+}
+
+#modelo {
+    max-width: 300px;
+}
+
+#ano {
+    max-width: 100px;
+}

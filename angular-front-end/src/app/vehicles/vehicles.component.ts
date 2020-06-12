@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Vehicle } from '../Models/vehicle';
 import { VehicleService } from '../services/vehicle.service';
-import { MessageService } from '../services/message.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-vehicles',
@@ -10,28 +10,44 @@ import { MessageService } from '../services/message.service';
 })
 export class VehiclesComponent implements OnInit {
 
+  vehicle = {} as Vehicle;
   vehicles: Vehicle[];
-  selectedVehicle: Vehicle;
 
-  constructor(private vehicleService: VehicleService, private messageService: MessageService) { }
+  constructor(
+    private vehicleService: VehicleService,
+    private alertService: AlertService) { }
 
   ngOnInit(): void {
     this.getVehicles();
   }
 
   getVehicles(): void {
+    window.scroll(0,0);
     this.vehicleService.getVehicles()
       .subscribe(vehicles => this.vehicles = vehicles);
   }
 
-  editVehicle(vehicle: Vehicle): void {
-    this.selectedVehicle = vehicle;
-    this.messageService.add(`O veículo '${vehicle.placa}' foi selecionado.`)
+  editVehicle(vehicle: Vehicle, el: HTMLElement): void {
+    this.vehicle = { ...vehicle };
+    el.scrollIntoView();
   }
 
   removeVehicle(vehicle: Vehicle): void {
     this.vehicleService.removeVehicle(vehicle.id)
-      .subscribe(() => this.getVehicles());
+      .subscribe((result) => {
+        if (result.success){
+          this.alertService.success(`Veículo '${vehicle.placa}' removido.`);
+          this.getVehicles()
+        }else{
+          this.alertService.error(`Erro ao remover o veículo '${vehicle.placa}'. ${result.message}`);
+        }
+      });
+  }
+
+  updateVehicles(reflesh){    
+    if (reflesh){
+      this.getVehicles();
+    }
   }
 
 }

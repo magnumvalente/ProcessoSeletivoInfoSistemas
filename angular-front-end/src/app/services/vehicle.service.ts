@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Vehicle } from '../Models/vehicle';
-import { Observable, of } from 'rxjs';
-import { MessageService } from './message.service';
+import { Observable, throwError, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, retry } from 'rxjs/operators';
 import { Result } from '../models/result';
 
 @Injectable({
@@ -14,58 +13,55 @@ export class VehicleService {
   private vehiclesUrl = 'http://localhost:8080/api/v1/vehicles';
 
   constructor(
-    private httpClient: HttpClient, 
-    private messageService: MessageService) { }
+    private httpClient: HttpClient) { }
 
     httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     }
 
   getVehicles(): Observable<Vehicle[]>{
     return this.httpClient.get<Vehicle[]>(this.vehiclesUrl)
       .pipe(
-        tap(_ => this.log('Buscando a lista de veículos')),
-        catchError(this.handleError<Vehicle[]>('getVehicles', []))
+        retry(1),
+        catchError(this.handleError)
       );
   }
 
   removeVehicle(id: string) : Observable<Result> {
     return this.httpClient.delete<Result>(`${this.vehiclesUrl}/${id}`, this.httpOptions)
       .pipe(
-        tap(_ => this.log(`Removendo o veículo id: '${id}'.`)),
-        catchError(this.handleError<Result>('removeVehicle'))
+        retry(1),
+        catchError(this.handleError)
       );
   }
 
   saveVehicle(vehicle: Vehicle) : Observable<Result> {
     return this.httpClient.post<Result>(this.vehiclesUrl, JSON.stringify(vehicle), this.httpOptions)
       .pipe(
-        tap(_ => this.log(`Criando o veículo de placa: '${vehicle.placa}'.`)),
-        catchError(this.handleError<Result>('saveVehicle'))
+        retry(1),
+        catchError(this.handleError)
       );
   }
 
   updateVehicle(vehicle: Vehicle) : Observable<Result> {
     return this.httpClient.put<Result>(`${this.vehiclesUrl}/${vehicle.id}`, JSON.stringify(vehicle), this.httpOptions)
       .pipe(
-        tap(_ => this.log(`Alteando o veículo id: '${vehicle.id}'.`)),
-        catchError(this.handleError<Result>('updateVehicle'))
+        retry(1),
+        catchError(this.handleError)
       );
   }
  
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      console.error(error); // log to console instead
-
-      this.log(`${operation} failed: ${error.message}`);
-
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    this.messageService.add(`HeroService: ${message}`);
-  }
+  handleError(error) {
+    let errorMessage = '';
+    if(error.error instanceof ErrorEvent) {
+      // Get client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Get server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
+ }
 
 }

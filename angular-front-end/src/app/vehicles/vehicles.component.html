@@ -18,15 +18,14 @@
               <td>{{vehicle.modelo}}</td>
               <td>{{vehicle.ano}}</td>
               <td>
-                <button type="button" class="btn btn-warning btn-sm" (click)="editVehicle(vehicle)">Editar</button>
+                <button type="button" class="btn btn-warning btn-sm" (click)="editVehicle(vehicle, detail)">Editar</button>
                 <button type="button" class="btn btn-danger btn-sm ml-1" (click)="removeVehicle(vehicle)">Remover</button>
               </td>
-            </tr>
-            <tr *ngif="!vehicles || vehicles.length === 0">
-                <td colspan="5">OI</td>
             </tr>
           </tbody>
         </table>
     </div>
-  </div>
-  <app-vehicle-detail [vehicle]="selectedVehicle"></app-vehicle-detail>
+</div>
+<div #detail>
+  <app-vehicle-detail  [vehicle]="vehicle" (reflesh)="updateVehicles($event)"></app-vehicle-detail>
+</div>
