@@ -31,7 +31,7 @@ describe("Backend API", () => {
             let vehicle = {
                 placa: "PAV2385",
                 chassi: "58C43343DE44B6535",
-                renavam: "5467889676",
+                renavam: "546788967",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -46,7 +46,7 @@ describe("Backend API", () => {
                 expect(response.body.success).to.equal(true);
 
                 const { vehiclesDataDB: vehiclesData } = require(pathData);
-                let vehicleInsertedIndex = vehiclesData.data.findIndex(v => v.placa === "PAV2385");
+                let vehicleInsertedIndex = vehiclesData.data.findIndex(v => v.placa === vehicle.placa);
 
                 expect(vehicleInsertedIndex).to.not.equal(-1);
                 expect(vehiclesData.data[vehicleInsertedIndex].id).to.not.equal(null);
@@ -64,9 +64,9 @@ describe("Backend API", () => {
         it("insert a vehicle with invalid placa", (done) => {
 
             let vehicle = {
-                placa: "PAV2385",
+                placa: "PAVR385",
                 chassi: "58C43343DE44B6545",
-                renavam: "5467879676",
+                renavam: "467879676",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -76,21 +76,21 @@ describe("Backend API", () => {
             .post("/api/v1/vehicles")
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com a placa \'PAV2385\' já existe.");                
+                expect(response.body.message).to.equal(`Veículo com a placa '${vehicle.placa}' inválida.`);                
                 done();
             });            
         });
 
-        it("insert a vehicle with invalid chassi", (done) => {
+        it("insert a vehicle with placa that already exists", (done) => {
 
             let vehicle = {
-                placa: "PAV5385",
-                chassi: "58C43343DE44B6535",
-                renavam: "5467879676",
+                placa: "PAV2385",
+                chassi: "58C43343DE44B6545",
+                renavam: "546789676",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -100,11 +100,59 @@ describe("Backend API", () => {
             .post("/api/v1/vehicles")
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com o chassi \'58C43343DE44B6535\' já existe.");
+                expect(response.body.message).to.equal(`Veículo com a placa '${vehicle.placa}' já existe.`);                
+                done();
+            });            
+        });
+
+        it("insert a vehicle with chassi that already exists", (done) => {
+
+            let vehicle = {
+                placa: "PAV5385",
+                chassi: "58C43343DE44B6535",
+                renavam: "546779676",
+                modelo: "Eco Sports",
+                marca: "Ford",
+                ano: 2015
+            }
+
+            chai.request(app)
+            .post("/api/v1/vehicles")
+            .send(vehicle)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.have.property("success");
+                expect(response.body.success).to.equal(false);
+                expect(response.body).to.have.property("message");
+                expect(response.body.message).to.equal(`Veículo com o chassi '${vehicle.chassi}' já existe.`);
+                done();
+            });            
+        });
+
+        it("insert a vehicle with renavam that already exists", (done) => {
+
+            let vehicle = {
+                placa: "PAV3585",
+                chassi: "58C45643DE44B6535",
+                renavam: "546788967",
+                modelo: "Eco Sports",
+                marca: "Ford",
+                ano: 2015
+            }
+
+            chai.request(app)
+            .post("/api/v1/vehicles")
+            .send(vehicle)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.have.property("success");
+                expect(response.body.success).to.equal(false);
+                expect(response.body).to.have.property("message");
+                expect(response.body.message).to.equal(`Veículo com o renavam '${vehicle.renavam}' já existe.`); 
                 done();
             });            
         });
@@ -114,7 +162,7 @@ describe("Backend API", () => {
             let vehicle = {
                 placa: "PAV3585",
                 chassi: "58C45643DE44B6535",
-                renavam: "5467889676",
+                renavam: "54678849676",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -124,11 +172,11 @@ describe("Backend API", () => {
             .post("/api/v1/vehicles")
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com o renavam \'5467889676\' já existe."); 
+                expect(response.body.message).to.equal(`Veículo com o renavam '${vehicle.renavam}' inválido.`); 
                 done();
             });            
         });
@@ -213,7 +261,7 @@ describe("Backend API", () => {
         it("update a vehicle with invalid placa", (done) => {
 
             let vehicle = {
-                placa: "PAV2385",
+                placa: "PAV238D",
                 chassi: "58C43343DE44B6545",
                 renavam: "5467879676",
                 modelo: "Eco Sports",
@@ -225,21 +273,21 @@ describe("Backend API", () => {
             .put(`/api/v1/vehicles/${vehicleToUpdateId}`)
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com a placa \'PAV2385\' já existe.");
+                expect(response.body.message).to.equal(`Veículo com a placa '${vehicle.placa}' inválida.`);
                 done();
             });
         });
 
-        it("update a vehicle with invalid chassi", (done) => {
+        it("update a vehicle with placa already exists", (done) => {
 
             let vehicle = {
-                placa: "PAV5385",
-                chassi: "58C43343DE44B6535",
-                renavam: "5467879676",
+                placa: "PAV2385",
+                chassi: "58C43343DE44B6545",
+                renavam: "546787976",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -249,11 +297,35 @@ describe("Backend API", () => {
             .put(`/api/v1/vehicles/${vehicleToUpdateId}`)
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com o chassi \'58C43343DE44B6535\' já existe.");
+                expect(response.body.message).to.equal(`Veículo com a placa '${vehicle.placa}' já existe.`);
+                done();
+            });
+        });
+
+        it("update a vehicle with chassi that already exists", (done) => {
+
+            let vehicle = {
+                placa: "PAV5385",
+                chassi: "58C43343DE44B6535",
+                renavam: "546787676",
+                modelo: "Eco Sports",
+                marca: "Ford",
+                ano: 2015
+            }
+
+            chai.request(app)
+            .put(`/api/v1/vehicles/${vehicleToUpdateId}`)
+            .send(vehicle)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.have.property("success");
+                expect(response.body.success).to.equal(false);
+                expect(response.body).to.have.property("message");
+                expect(response.body.message).to.equal(`Veículo com o chassi '${vehicle.chassi}' já existe.`);
                 done();
             });
         });
@@ -263,7 +335,7 @@ describe("Backend API", () => {
             let vehicle = {
                 placa: "PAV3585",
                 chassi: "58C45643DE44B6535",
-                renavam: "5467889676",
+                renavam: "546788C76",
                 modelo: "Eco Sports",
                 marca: "Ford",
                 ano: 2015
@@ -273,16 +345,40 @@ describe("Backend API", () => {
             .put(`/api/v1/vehicles/${vehicleToUpdateId}`)
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(409);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
-                expect(response.body.message).to.equal("Veículo com o renavam \'5467889676\' já existe.");
+                expect(response.body.message).to.equal(`Veículo com o renavam '${vehicle.renavam}' inválido.`);
                 done();   
             });            
         });
 
-        it("update a invalid vehicle", (done) => {
+        it("update a vehicle with renavam that already exists", (done) => {
+
+            let vehicle = {
+                placa: "PAV3585",
+                chassi: "58C45643DE44B6535",
+                renavam: "546788967",
+                modelo: "Eco Sports",
+                marca: "Ford",
+                ano: 2015
+            }
+
+            chai.request(app)
+            .put(`/api/v1/vehicles/${vehicleToUpdateId}`)
+            .send(vehicle)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.have.property("success");
+                expect(response.body.success).to.equal(false);
+                expect(response.body).to.have.property("message");
+                expect(response.body.message).to.equal(`Veículo com o renavam '${vehicle.renavam}' já existe.`);
+                done();   
+            });            
+        });
+
+        it("update a invalid vehicle id", (done) => {
 
             let vehicle = {
                 placa: "PAV3585",
@@ -297,7 +393,7 @@ describe("Backend API", () => {
             .put("/api/v1/vehicles/0")
             .send(vehicle)
             .end((error, response) => {
-                expect(response).to.have.status(404);
+                expect(response).to.have.status(200);
                 expect(response.body).to.have.property("success");
                 expect(response.body.success).to.equal(false);
                 expect(response.body).to.have.property("message");
@@ -344,7 +440,7 @@ describe("Backend API", () => {
             chai.request(app)
                 .get("/api/v1/vehicles/0")
                 .end((error, response) => {
-                    expect(response).to.have.status(404);
+                    expect(response).to.have.status(200);
                     expect(response.body).to.have.property("success");
                     expect(response.body.success).to.equal(false);
                     expect(response.body).to.have.property("message");
@@ -378,7 +474,7 @@ describe("Backend API", () => {
             chai.request(app)
                 .delete("/api/v1/vehicles/0")
                 .end((error, response) => {
-                    expect(response).to.have.status(404);
+                    expect(response).to.have.status(200);
                     expect(response.body).to.have.property("success");
                     expect(response.body.success).to.equal(false);
                     expect(response.body).to.have.property("message");

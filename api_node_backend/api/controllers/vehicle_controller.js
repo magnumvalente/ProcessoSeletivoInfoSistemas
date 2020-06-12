@@ -12,7 +12,7 @@ function findVehicleIndex(vehiclesDataMock, req, res){
 
     if (vehicleIndex === -1){
 
-        res.status(404).json({
+        res.status(200).json({
             message: 'Veículo não encontrado.',
             success: false
         });
@@ -22,9 +22,25 @@ function findVehicleIndex(vehiclesDataMock, req, res){
 
 function validateSaveOrUpdateData(vehiclesDataMock, req, res){
     
+    if (!/^[A-Z]{3}[0-9]([A-Z][0-9]|[0-9][A-Z]|[0-9]{2})[0-9]$/.test(req.body.placa)){
+        res.status(200).json({
+            message: `Veículo com a placa '${req.body.placa}' inválida.`,
+            success: false
+        });
+        return false;
+    }
+
+    if (!/^[0-9]{9}$/.test(req.body.renavam)){
+        res.status(200).json({
+            message: `Veículo com o renavam '${req.body.renavam}' inválido.`,
+            success: false
+        });
+        return false;
+    }
+
     let vehicleIndex = vehiclesDataMock.data.findIndex(vehicle => vehicle.placa === req.body.placa);
     if (vehicleIndex > -1){
-        res.status(409).json({
+        res.status(200).json({
             message: `Veículo com a placa '${req.body.placa}' já existe.`,
             success: false
         });
@@ -33,7 +49,7 @@ function validateSaveOrUpdateData(vehiclesDataMock, req, res){
 
     vehicleIndex = vehiclesDataMock.data.findIndex(vehicle => vehicle.chassi === req.body.chassi);
     if (vehicleIndex > -1){
-        res.status(409).json({
+        res.status(200).json({
             message: `Veículo com o chassi '${req.body.chassi}' já existe.`,
             success: false
         });
@@ -42,7 +58,7 @@ function validateSaveOrUpdateData(vehiclesDataMock, req, res){
 
     vehicleIndex = vehiclesDataMock.data.findIndex(vehicle => vehicle.renavam === req.body.renavam);
     if (vehicleIndex > -1){
-        res.status(409).json({
+        res.status(200).json({
             message: `Veículo com o renavam '${req.body.renavam}' já existe.`,
             success: false
         });
